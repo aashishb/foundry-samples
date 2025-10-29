@@ -1,19 +1,19 @@
 {
   "properties": {
-    "displayName": "Only selected Foundry connection categories are allowed",
+    "displayName": "Only allow Foundry MCP connections from select sources",
     "policyType": "Custom",
     "mode": "All",
-    "description": "Only selected Foundry connection categories are allowed",
+    "description": "Only selected Foundry MCP connection sources are allowed",
     "version": "1.0.0",
     "parameters": {
-      "allowedCategories": {
+      "allowedSources": {
         "type": "Array",
         "metadata": {
-          "description": "Categories allowed for Microsoft.CognitiveServices/accounts/connections and Microsoft.CognitiveServices/accounts/projects/connections",
-          "displayName": "Allowed connection categories"
+          "description": "Only select target addresses are allowed for MCP connections.",
+          "displayName": "Allowed connection targets"
         },
         "defaultValue": [
-          "BingLLMSearch"
+          "https://api.githubcopilot.com/mcp"
         ]
       }
     },
@@ -28,7 +28,11 @@
               },
               {
                 "field": "Microsoft.CognitiveServices/accounts/connections/category",
-                "notIn": "[parameters('allowedCategories')]"
+                "equals": "RemoteTool"
+              },
+              {
+                "field": "Microsoft.CognitiveServices/accounts/connections/target",
+                "notIn": "[parameters('allowedSources')]"
               }
             ]
           },
@@ -39,8 +43,12 @@
                 "equals": "Microsoft.CognitiveServices/accounts/projects/connections"
               },
               {
-                "field": "Microsoft.CognitiveServices/accounts/projects/connections/category",
-                "notIn": "[parameters('allowedCategories')]"
+                "field": "Microsoft.CognitiveServices/accounts/connections/category",
+                "equals": "RemoteTool"
+              },
+              {
+                "field": "Microsoft.CognitiveServices/accounts/projects/connections/target",
+                "notIn": "[parameters('allowedSources')]"
               }
             ]
           }
